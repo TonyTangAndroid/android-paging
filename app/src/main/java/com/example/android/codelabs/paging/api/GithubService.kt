@@ -16,10 +16,11 @@
 
 package com.example.android.codelabs.paging.api
 
+import android.content.Context
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -44,12 +45,14 @@ interface GithubService {
     companion object {
         private const val BASE_URL = "https://api.github.com/"
 
-        fun create(): GithubService {
+        fun create(context: Context): GithubService {
             val logger = HttpLoggingInterceptor()
+            val chuckerLogger = ChuckerInterceptor(context)
             logger.level = Level.BASIC
 
             val client = OkHttpClient.Builder()
                     .addInterceptor(logger)
+                    .addInterceptor(chuckerLogger)
                     .build()
             return Retrofit.Builder()
                     .baseUrl(BASE_URL)
