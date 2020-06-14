@@ -18,6 +18,7 @@ package com.example.android.codelabs.paging.api
 
 import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerInterceptor
+import com.simplemented.okdelay.DelayInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level
@@ -48,11 +49,13 @@ interface GithubService {
         fun create(context: Context): GithubService {
             val logger = HttpLoggingInterceptor()
             val chuckerLogger = ChuckerInterceptor(context)
+            val delayLogger = DelayInterceptor { 1500L }
             logger.level = Level.BASIC
 
             val client = OkHttpClient.Builder()
                     .addInterceptor(logger)
                     .addInterceptor(chuckerLogger)
+                    .addInterceptor(delayLogger)
                     .build()
             return Retrofit.Builder()
                     .baseUrl(BASE_URL)
